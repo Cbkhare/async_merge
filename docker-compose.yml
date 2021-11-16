@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+  webapp:
+    build: ./webapp
+    networks:
+      - default
+  redis:
+    image: 'redis:alpine'
+    expose:
+      - '6379'
+    networks:
+      default:
+        aliases:
+          - redisservice
+  asyncworker:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.asyncworker
+    networks:
+      - default
+  webapp:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.webapp
+    ports:
+      - '127.0.0.1:6543:6543'
+    networks:
+      - default
+  minio:
+    hostname: minio
+    image: minio/minio
+    container_name: minio
+    ports:
+      - '127.0.0.1:9000:9000'
+    volumes:
+      - './miniodata:/data'
+    networks:
+      - default
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server /data
+volumes:
+  miniodata:
+networks:
+  default:

@@ -1,0 +1,11 @@
+FROM python:3.7-alpine
+
+WORKDIR /usr/src/apps/asyncworker
+COPY ./asyncworker .
+RUN ["pip", "install", "."]
+
+WORKDIR /usr/src/apps/webapp
+COPY ./webapp .
+RUN ["pip", "install", "."]
+
+CMD ["pserve", "development.ini"]
