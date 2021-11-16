@@ -125,11 +125,14 @@ class S3Tasks(object):
     def merge_files(self):
         main_obj = Main(self.files_to_be_merged, self.path, self.final_file_name)
         main_obj.merge_into_one()
+        self.boto_conn.upload(self.final_file_name, self.path)
         return
 
     def upload_sorted_file(self):
+        # TODO 
+        # Merge sometime fails and donot throw the error, identify it
+        # Then Add a thread/process to trigger merge files
         self.merge_files()
-        self.boto_conn.upload(self.final_file_name, self.path)
         return self.final_file_name
 
 
