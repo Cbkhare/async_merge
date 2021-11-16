@@ -1,0 +1,9 @@
+FROM python:3.7-alpine
+
+WORKDIR /usr/src/apps
+
+COPY ./asyncworker .
+
+RUN ["pip", "install", "."]
+
+CMD ["celery", "-A", "asyncworker", "worker", "--loglevel=INFO"]
